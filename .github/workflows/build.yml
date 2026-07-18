@@ -21,7 +21,7 @@ jobs:
     - name: Build with MSBuild
       shell: cmd
       run: |
-        msbuild SWBF2ClassicInternalHax.sln /p:Configuration=Release /p:Platform=Win32 /restore /m
+        msbuild SWBF2ClassicInternalHax.sln /p:Configuration=Release /p:Platform=x86 /restore /m
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
