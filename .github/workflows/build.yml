@@ -15,13 +15,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Fix include paths in vcxproj
+      shell: pwsh
+      run: |
+        $vcxproj = "SWBF2ClassicInternalHax\SWBF2ClassicInternalHax.vcxproj"
+        $content = Get-Content $vcxproj -Raw
+        $absPath = (Get-Location).Path + "\SWBF2ClassicInternalHax\external"
+        $content = $content.Replace("SWBF2ClassicInternalHax\external", $absPath)
+        Set-Content $vcxproj -Value $content -NoNewline
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
     - name: Build with MSBuild
       shell: cmd
       run: |
-        set INCLUDE=%CD%\SWBF2ClassicInternalHax\external;%INCLUDE%
         msbuild SWBF2ClassicInternalHax.sln /p:Configuration=Release /p:Platform=x86 /restore /m
 
     - name: Upload Build Artifacts
@@ -30,5 +38,4 @@ jobs:
         name: SWBF2ClassicHack-x86-Release
         path: |
           build/**/*.dll
-        retention-days: 30
         if-no-files-found: warn
