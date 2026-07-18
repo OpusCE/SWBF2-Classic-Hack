@@ -15,24 +15,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Check CMake version
-      shell: cmd
-      run: cmake --version
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
 
-    - name: Configure CMake
+    - name: Build with MSBuild
       shell: cmd
       run: |
-        cmake -S . -B build -G "Visual Studio 17 2022" -A Win32 -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build
-      shell: cmd
-      run: |
-        cmake --build build --config Release --parallel
+        msbuild SWBF2ClassicInternalHax.sln /p:Configuration=Release /p:Platform=Win32 /restore /m
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: SWBF2ClassicHack-x86-Release
-        path: build/**/*.dll
+        path: |
+          build/**/*.dll
+          **/Release/*.dll
         retention-days: 30
         if-no-files-found: warn
