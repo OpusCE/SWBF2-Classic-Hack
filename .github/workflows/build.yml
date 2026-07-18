@@ -15,10 +15,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup CMake
-      uses: jwlawson/actions-setup-cmake@v2
-      with:
-        cmake-version: '4.3.4'
+    - name: Check CMake version
+      shell: cmd
+      run: cmake --version
 
     - name: Configure CMake
       shell: cmd
