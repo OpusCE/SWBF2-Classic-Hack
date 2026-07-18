@@ -15,32 +15,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Create external directory
-      shell: cmd
-      run: |
-        mkdir external
-
-    - name: Fetch GLM (math library)
-      shell: cmd
-      run: |
-        git clone https://github.com/g-truc/glm.git external/glm --depth 1
-
-    - name: Fetch ImGui
-      shell: cmd
-      run: |
-        git clone https://github.com/ocornut/imgui.git external/ImGui --depth 1
-
-    - name: Fetch MinHook
-      shell: cmd
-      run: |
-        git clone https://github.com/TsudaKageyu/minhook.git external/minhook --depth 1
-
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
     - name: Build with MSBuild
       shell: cmd
       run: |
+        set INCLUDE=%CD%\SWBF2ClassicInternalHax\external;%INCLUDE%
         msbuild SWBF2ClassicInternalHax.sln /p:Configuration=Release /p:Platform=x86 /restore /m
 
     - name: Upload Build Artifacts
@@ -49,6 +30,5 @@ jobs:
         name: SWBF2ClassicHack-x86-Release
         path: |
           build/**/*.dll
-          **/Release/*.dll
         retention-days: 30
         if-no-files-found: warn
